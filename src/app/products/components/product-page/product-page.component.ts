@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Product } from '../../interfaces/product.interface';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'fd-product-page',
