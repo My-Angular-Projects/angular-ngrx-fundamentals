@@ -1,16 +1,18 @@
-<div class="card error-card" *ngIf="errorMessage">
-  Error: {{ errorMessage }}
-</div>
-
-<div *ngIf="!loading; else loadingElement">
-  <div class="container">
-    <fd-products-list
-      [total]="total"
-      [products]="products"
-      [showProductCode]="showProductCode"
-      (toggleProductCode)="toggleShowProductCode()"
-    ></fd-products-list>
+@if (errorMessage) {
+  <div class="card error-card">
+    Error: {{ errorMessage }}
   </div>
-</div>
+}
 
-<ng-template #loadingElement>Loading...</ng-template>
+@if (!loading) {
+    <div class="container">
+      <fd-products-list
+        [total]="total"
+        [products]="products"
+        [showProductCode]="showProductCode$ | async"
+        (toggleProductCode)="toggleShowProductCode()"
+      ></fd-products-list>
+    </div>
+} @else {
+  Loading...
+}

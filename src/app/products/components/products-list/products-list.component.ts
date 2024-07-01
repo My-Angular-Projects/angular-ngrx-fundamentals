@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { Product } from '../../interfaces/product.interface';
+import { Product } from '../../interfaces';
 
 @Component({
   selector: 'fd-products-list',

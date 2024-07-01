@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { Product } from '../../interfaces/product.interface';
 import { ProductsService } from '../../services/products.service';
 import { sumProducts } from '../../helpers/sum-products.helper';
+import { select, Store } from '@ngrx/store';
+import { ProductsActionGroup } from '../../store/products.action';
+import { Observable } from 'rxjs';
+import { productsFeature } from '../../store/products.reducer';
 
 @Component({
   selector: 'fd-products-page',
@@ -10,19 +19,24 @@ import { sumProducts } from '../../helpers/sum-products.helper';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsPageComponent implements OnInit {
+  private readonly store = inject(Store);
+
   products: Product[] = [];
   total = 0;
   loading = true;
-  showProductCode = false;
   errorMessage = '';
+
+  public readonly showProductCode$: Observable<boolean> = this.store.pipe(
+    select(productsFeature.selectShowProductCode),
+  );
 
   constructor(private productsService: ProductsService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getProducts();
   }
 
-  getProducts() {
+  public getProducts(): void {
     this.productsService.getAll().subscribe({
       next: (products) => {
         this.products = products;
@@ -33,7 +47,7 @@ export class ProductsPageComponent implements OnInit {
     });
   }
 
-  toggleShowProductCode() {
-    this.showProductCode = !this.showProductCode;
+  public toggleShowProductCode(): void {
+    this.store.dispatch(ProductsActionGroup.toggleShowProductCode());
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Product } from '../../interfaces/product.interface';
@@ -10,33 +10,33 @@ import { ProductsService } from '../../services/products.service';
   styleUrl: './product-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductPageComponent {
-  product$: Observable<Product> | undefined;
+export class ProductPageComponent implements OnInit {
+  public product$: Observable<Product> | undefined;
 
   constructor(
-    private productsService: ProductsService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private readonly productsService: ProductsService,
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     const productId = parseInt(this.activatedRoute.snapshot.params['id']);
     this.getProduct(productId);
   }
 
-  getProduct(id: number) {
+  public getProduct(id: number): void {
     this.product$ = this.productsService.getById(id);
   }
 
-  addProduct(product: Product) {
+  public addProduct(product: Product): void {
     this.productsService.add(product).subscribe(this.goToProductsPage);
   }
 
-  updateProduct(product: Product) {
+  public updateProduct(product: Product): void {
     this.productsService.update(product).subscribe(this.goToProductsPage);
   }
 
-  deleteProduct(id: number) {
+  public deleteProduct(id: number): void {
     this.productsService.delete(id).subscribe(this.goToProductsPage);
   }
 

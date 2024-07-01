@@ -6,9 +6,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ProductPageComponent } from './components/product-page/product-page.component';
 import { ProductsListComponent } from './components/products-list/products-list.component';
 import { ProductsPageComponent } from './components/products-page/products-page.component';
+import { StoreModule } from '@ngrx/store';
+import { productsFeature } from './store/products.reducer';
 
 @NgModule({
-  declarations: [ProductEditComponent, ProductPageComponent, ProductsListComponent, ProductsPageComponent],
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  declarations: [
+    ProductEditComponent,
+    ProductPageComponent,
+    ProductsListComponent,
+    ProductsPageComponent,
+  ],
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    StoreModule.forFeature(productsFeature),
+  ],
 })
 export class ProductsModule {}
