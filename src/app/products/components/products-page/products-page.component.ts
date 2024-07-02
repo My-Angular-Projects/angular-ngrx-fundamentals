@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import { Product } from '../../interfaces';
 import { ProductsService } from '../../services/products.service';
-import { sumProducts } from '../../helpers/sum-products.helper';
 import { select, Store } from '@ngrx/store';
 import {
   ProductsActions,
@@ -25,8 +24,6 @@ export class ProductsPageComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly productsService = inject(ProductsService);
 
-  total = 0;
-
   public readonly products$: Observable<Product[]> = this.store.pipe(
     select(productsFeature.selectProducts),
   );
@@ -43,6 +40,10 @@ export class ProductsPageComponent implements OnInit {
     select(productsFeature.selectErrorMessage),
   );
 
+  public readonly total$ = this.store.pipe(
+    select(productsFeature.selectProductsSum),
+  );
+
   ngOnInit(): void {
     this.getProducts();
   }
@@ -55,7 +56,7 @@ export class ProductsPageComponent implements OnInit {
         this.store.dispatch(
           ProductsAPIActions.productsLoadedSuccess({ products }),
         );
-        this.total = sumProducts(products);
+        // this.total = sumProducts(products);
       },
       // error: (error) => (this.errorMessage = error),
     });

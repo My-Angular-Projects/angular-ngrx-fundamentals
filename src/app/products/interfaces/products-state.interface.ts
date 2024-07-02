@@ -5,5 +5,4 @@ export interface IProductsState {
   showProductCode: boolean;
   errorMessage: string;
   loading: boolean;
-  total: number;
 }

@@ -1,13 +1,13 @@
-import { IProductsState } from '../interfaces';
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { IProductsState, Product } from '../interfaces';
+import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { ProductsActions, ProductsAPIActions } from './products.action';
+import { sumProducts } from '../helpers/sum-products.helper';
 
 export const initialState: IProductsState = {
   products: [],
   showProductCode: true,
   errorMessage: '',
   loading: false,
-  total: 0,
 };
 
 const productsReducer = createReducer(
@@ -41,4 +41,9 @@ const productsReducer = createReducer(
 export const productsFeature = createFeature({
   name: 'products',
   reducer: productsReducer,
+  extraSelectors: ({ selectProducts }) => ({
+    selectProductsSum: createSelector(selectProducts, (products: Product[]) =>
+      sumProducts(products),
+    ),
+  }),
 });

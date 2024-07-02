@@ -7,7 +7,7 @@
 @if ((loading$ | async) === false) {
     <div class="container">
       <fd-products-list
-        [total]="total"
+        [total]="total$ | async"
         [products]="products$ | async"
         [showProductCode]="showProductCode$ | async"
         (toggleProductCode)="toggleShowProductCode()"
