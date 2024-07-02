@@ -4,9 +4,9 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Product } from '../../interfaces/product.interface';
+import { Product } from '../../interfaces';
 import { ProductsService } from '../../services/products.service';
 import { Store } from '@ngrx/store';
 import { ProductsActions } from '../../store/products.action';
@@ -24,7 +24,6 @@ export class ProductPageComponent implements OnInit {
 
   constructor(
     private readonly productsService: ProductsService,
-    private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
   ) {}
 
@@ -38,17 +37,14 @@ export class ProductPageComponent implements OnInit {
   }
 
   public addProduct(product: Product): void {
-    // this.productsService.add(product).subscribe(this.goToProductsPage);
     this.store.dispatch(ProductsActions.addProduct({ product }));
   }
 
   public updateProduct(product: Product): void {
-    this.productsService.update(product).subscribe(this.goToProductsPage);
+    this.store.dispatch(ProductsActions.updateProduct({ product }));
   }
 
   public deleteProduct(id: number): void {
-    this.productsService.delete(id).subscribe(this.goToProductsPage);
+    this.store.dispatch(ProductsActions.removeProduct({ id }));
   }
-
-  private goToProductsPage = () => this.router.navigate(['/products']);
 }

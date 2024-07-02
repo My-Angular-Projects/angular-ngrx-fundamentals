@@ -2,7 +2,16 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import { ProductsService } from '../services/products.service';
 import { ProductsActions, ProductsAPIActions } from './products.action';
-import { catchError, exhaustMap, map, mergeMap, of } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  exhaustMap,
+  map,
+  mergeMap,
+  of,
+  switchMap,
+} from 'rxjs';
+import { Router } from '@angular/router';
 
 export const productsLoadEffect = createEffect(
   (actions$ = inject(Actions), productsService = inject(ProductsService)) =>
@@ -38,4 +47,51 @@ export const productsAddEffect = createEffect(
       ),
     ),
   { functional: true },
+);
+
+export const productsUpdateEffect = createEffect(
+  (actions$ = inject(Actions), productsService = inject(ProductsService)) =>
+    actions$.pipe(
+      ofType(ProductsActions.updateProduct),
+      concatMap(({ product }) =>
+        productsService.update(product).pipe(
+          map((product) =>
+            ProductsAPIActions.updateProductSuccess({ product }),
+          ),
+          catchError((error: Error) =>
+            of(
+              ProductsAPIActions.updateProductFail({ message: error.message }),
+            ),
+          ),
+        ),
+      ),
+    ),
+  { functional: true },
+);
+
+export const productsRemoveEffect = createEffect(
+  (actions$ = inject(Actions), productsService = inject(ProductsService)) =>
+    actions$.pipe(
+      ofType(ProductsActions.removeProduct),
+      mergeMap(({ id }) =>
+        productsService.delete(id).pipe(
+          map((product) => ProductsAPIActions.removeProductSuccess({ id })),
+          catchError((error: Error) =>
+            of(
+              ProductsAPIActions.removeProductFail({ message: error.message }),
+            ),
+          ),
+        ),
+      ),
+    ),
+  { functional: true },
+);
+
+export const productRedirectEffect = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(ProductsAPIActions),
+      switchMap(() => inject(Router).navigate(['/products'])),
+    ),
+  { functional: true, dispatch: false },
 );

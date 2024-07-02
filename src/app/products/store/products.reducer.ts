@@ -38,10 +38,16 @@ const productsReducer = createReducer(
       errorMessage: message,
     }),
   ),
+  on(ProductsActions.addProduct, (state: IProductsState) => ({
+    ...state,
+    loading: true,
+    errorMessage: '',
+  })),
   on(
     ProductsAPIActions.addProductSuccess,
     (state: IProductsState, { product }) => ({
       ...state,
+      loading: false,
       products: [...state.products, product],
       errorMessage: '',
     }),
@@ -50,6 +56,54 @@ const productsReducer = createReducer(
     ProductsAPIActions.addProductFail,
     (state: IProductsState, { message }) => ({
       ...state,
+      loading: false,
+      errorMessage: message,
+    }),
+  ),
+  on(ProductsActions.updateProduct, (state: IProductsState) => ({
+    ...state,
+    loading: true,
+    errorMessage: '',
+  })),
+  on(
+    ProductsAPIActions.updateProductSuccess,
+    (state: IProductsState, { product }) => ({
+      ...state,
+      loading: false,
+      products: state.products.map((existingProduct: Product) =>
+        existingProduct.id === product.id ? product : existingProduct,
+      ),
+      errorMessage: '',
+    }),
+  ),
+  on(
+    ProductsAPIActions.updateProductFail,
+    (state: IProductsState, { message }) => ({
+      ...state,
+      loading: false,
+      errorMessage: message,
+    }),
+  ),
+  on(ProductsActions.removeProduct, (state: IProductsState) => ({
+    ...state,
+    loading: true,
+    errorMessage: '',
+  })),
+  on(
+    ProductsAPIActions.removeProductSuccess,
+    (state: IProductsState, { id }) => ({
+      ...state,
+      loading: false,
+      products: state.products.filter(
+        (existingProduct: Product) => existingProduct.id !== id,
+      ),
+    }),
+  ),
+  on(
+    ProductsAPIActions.removeProductFail,
+    (state: IProductsState, { message }) => ({
+      ...state,
+      loading: false,
       errorMessage: message,
     }),
   ),
