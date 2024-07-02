@@ -19,6 +19,7 @@ const productsReducer = createReducer(
   on(ProductsActions.loadProducts, (state: IProductsState) => ({
     ...state,
     loading: true,
+    errorMessage: '',
   })),
   on(
     ProductsAPIActions.productsLoadedSuccess,
@@ -26,6 +27,7 @@ const productsReducer = createReducer(
       ...state,
       loading: false,
       products,
+      errorMessage: '',
     }),
   ),
   on(
@@ -33,6 +35,21 @@ const productsReducer = createReducer(
     (state: IProductsState, { message }) => ({
       ...state,
       loading: false,
+      errorMessage: message,
+    }),
+  ),
+  on(
+    ProductsAPIActions.addProductSuccess,
+    (state: IProductsState, { product }) => ({
+      ...state,
+      products: [...state.products, product],
+      errorMessage: '',
+    }),
+  ),
+  on(
+    ProductsAPIActions.addProductFail,
+    (state: IProductsState, { message }) => ({
+      ...state,
       errorMessage: message,
     }),
   ),

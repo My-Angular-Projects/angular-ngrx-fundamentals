@@ -5,12 +5,8 @@ import {
   OnInit,
 } from '@angular/core';
 import { Product } from '../../interfaces';
-import { ProductsService } from '../../services/products.service';
 import { select, Store } from '@ngrx/store';
-import {
-  ProductsActions,
-  ProductsAPIActions,
-} from '../../store/products.action';
+import { ProductsActions } from '../../store/products.action';
 import { Observable } from 'rxjs';
 import { productsFeature } from '../../store/products.reducer';
 
@@ -22,7 +18,6 @@ import { productsFeature } from '../../store/products.reducer';
 })
 export class ProductsPageComponent implements OnInit {
   private readonly store = inject(Store);
-  private readonly productsService = inject(ProductsService);
 
   public readonly products$: Observable<Product[]> = this.store.pipe(
     select(productsFeature.selectProducts),
@@ -45,21 +40,7 @@ export class ProductsPageComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    this.getProducts();
-  }
-
-  // TODO: move to effect
-  public getProducts(): void {
     this.store.dispatch(ProductsActions.loadProducts());
-    this.productsService.getAll().subscribe({
-      next: (products) => {
-        this.store.dispatch(
-          ProductsAPIActions.productsLoadedSuccess({ products }),
-        );
-        // this.total = sumProducts(products);
-      },
-      // error: (error) => (this.errorMessage = error),
-    });
   }
 
   public toggleShowProductCode(): void {

@@ -1,8 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Product } from '../../interfaces/product.interface';
 import { ProductsService } from '../../services/products.service';
+import { Store } from '@ngrx/store';
+import { ProductsActions } from '../../store/products.action';
 
 @Component({
   selector: 'fd-product-page',
@@ -11,6 +18,8 @@ import { ProductsService } from '../../services/products.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductPageComponent implements OnInit {
+  private readonly store = inject(Store);
+
   public product$: Observable<Product> | undefined;
 
   constructor(
@@ -29,7 +38,8 @@ export class ProductPageComponent implements OnInit {
   }
 
   public addProduct(product: Product): void {
-    this.productsService.add(product).subscribe(this.goToProductsPage);
+    // this.productsService.add(product).subscribe(this.goToProductsPage);
+    this.store.dispatch(ProductsActions.addProduct({ product }));
   }
 
   public updateProduct(product: Product): void {
