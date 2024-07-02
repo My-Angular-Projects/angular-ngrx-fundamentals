@@ -1,20 +1,41 @@
 import { IProductsState } from '../interfaces';
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { ProductsActionGroup } from './products.action';
+import { ProductsActions, ProductsAPIActions } from './products.action';
 
 export const initialState: IProductsState = {
   products: [],
   showProductCode: true,
   errorMessage: '',
-  loading: true,
+  loading: false,
+  total: 0,
 };
 
 const productsReducer = createReducer(
   initialState,
-  on(ProductsActionGroup.toggleShowProductCode, (state: IProductsState) => ({
+  on(ProductsActions.toggleShowProductCode, (state: IProductsState) => ({
     ...state,
     showProductCode: !state.showProductCode,
   })),
+  on(ProductsActions.loadProducts, (state: IProductsState) => ({
+    ...state,
+    loading: true,
+  })),
+  on(
+    ProductsAPIActions.productsLoadedSuccess,
+    (state: IProductsState, { products }) => ({
+      ...state,
+      loading: false,
+      products,
+    }),
+  ),
+  on(
+    ProductsAPIActions.productsLoadedFail,
+    (state: IProductsState, { message }) => ({
+      ...state,
+      loading: false,
+      errorMessage: message,
+    }),
+  ),
 );
 
 export const productsFeature = createFeature({

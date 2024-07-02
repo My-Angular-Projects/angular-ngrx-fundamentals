@@ -1,14 +1,14 @@
-@if (errorMessage) {
+@if (errorMessage$ | async; as errorMessage) {
   <div class="card error-card">
     Error: {{ errorMessage }}
   </div>
 }
 
-@if (!loading) {
+@if ((loading$ | async) === false) {
     <div class="container">
       <fd-products-list
         [total]="total"
-        [products]="products"
+        [products]="products$ | async"
         [showProductCode]="showProductCode$ | async"
         (toggleProductCode)="toggleShowProductCode()"
       ></fd-products-list>

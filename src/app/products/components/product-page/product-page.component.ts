@@ -40,5 +40,5 @@ export class ProductPageComponent implements OnInit {
     this.productsService.delete(id).subscribe(this.goToProductsPage);
   }
 
-  goToProductsPage = () => this.router.navigate(['/products']);
+  private goToProductsPage = () => this.router.navigate(['/products']);
 }

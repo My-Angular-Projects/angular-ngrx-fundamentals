@@ -16,25 +16,25 @@ export class ProductsService {
       .pipe(catchError(this.handleError));
   }
 
-  getById(id: number) {
+  public getById(id: number) {
     return this.http
       .get<Product>(`${this.productsAPIUrl}/${id}`)
       .pipe(catchError(this.handleError));
   }
 
-  add({ name, price }: Product): Observable<Product> {
+  public add({ name, price }: Product): Observable<Product> {
     return this.http
       .post<Product>(this.productsAPIUrl, { name, price })
       .pipe(catchError(this.handleError));
   }
 
-  update(product: Product): Observable<Product> {
+  public update(product: Product): Observable<Product> {
     return this.http
       .put<Product>(this.productsAPIUrl, product)
       .pipe(catchError(this.handleError));
   }
 
-  delete(id: number): Observable<unknown> {
+  public delete(id: number): Observable<unknown> {
     const url = `${this.productsAPIUrl}/${id}`;
     return this.http.delete(url).pipe(catchError(this.handleError));
   }

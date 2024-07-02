@@ -1,4 +1,4 @@
-import { Product } from '../interfaces/product.interface';
+import { Product } from '../interfaces';
 
-export const sumProducts = (products: Product[]) =>
-  products.reduce((acc: number, cur) => acc + cur.price, 0);
+export const sumProducts = (products: Product[]): number =>
+  products.reduce((sum: number, product: Product) => sum + product.price, 0);

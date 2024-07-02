@@ -4,11 +4,14 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { Product } from '../../interfaces/product.interface';
+import { Product } from '../../interfaces';
 import { ProductsService } from '../../services/products.service';
 import { sumProducts } from '../../helpers/sum-products.helper';
 import { select, Store } from '@ngrx/store';
-import { ProductsActionGroup } from '../../store/products.action';
+import {
+  ProductsActions,
+  ProductsAPIActions,
+} from '../../store/products.action';
 import { Observable } from 'rxjs';
 import { productsFeature } from '../../store/products.reducer';
 
@@ -20,34 +23,45 @@ import { productsFeature } from '../../store/products.reducer';
 })
 export class ProductsPageComponent implements OnInit {
   private readonly store = inject(Store);
+  private readonly productsService = inject(ProductsService);
 
-  products: Product[] = [];
   total = 0;
-  loading = true;
-  errorMessage = '';
+
+  public readonly products$: Observable<Product[]> = this.store.pipe(
+    select(productsFeature.selectProducts),
+  );
 
   public readonly showProductCode$: Observable<boolean> = this.store.pipe(
     select(productsFeature.selectShowProductCode),
   );
 
-  constructor(private productsService: ProductsService) {}
+  public readonly loading$: Observable<boolean> = this.store.pipe(
+    select(productsFeature.selectLoading),
+  );
+
+  public readonly errorMessage$: Observable<string> = this.store.pipe(
+    select(productsFeature.selectErrorMessage),
+  );
 
   ngOnInit(): void {
     this.getProducts();
   }
 
+  // TODO: move to effect
   public getProducts(): void {
+    this.store.dispatch(ProductsActions.loadProducts());
     this.productsService.getAll().subscribe({
       next: (products) => {
-        this.products = products;
+        this.store.dispatch(
+          ProductsAPIActions.productsLoadedSuccess({ products }),
+        );
         this.total = sumProducts(products);
-        this.loading = false;
       },
-      error: (error) => (this.errorMessage = error),
+      // error: (error) => (this.errorMessage = error),
     });
   }
 
   public toggleShowProductCode(): void {
-    this.store.dispatch(ProductsActionGroup.toggleShowProductCode());
+    this.store.dispatch(ProductsActions.toggleShowProductCode());
   }
 }
