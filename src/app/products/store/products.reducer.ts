@@ -2,6 +2,7 @@ import { IProductsState, Product } from '../interfaces';
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { ProductsActions, ProductsAPIActions } from './products.action';
 import { sumProducts } from '../helpers/sum-products.helper';
+import { getRouterSelectors } from '@ngrx/router-store';
 
 export const initialState: IProductsState = {
   products: [],
@@ -112,9 +113,20 @@ const productsReducer = createReducer(
 export const productsFeature = createFeature({
   name: 'products',
   reducer: productsReducer,
-  extraSelectors: ({ selectProducts }) => ({
-    selectProductsSum: createSelector(selectProducts, (products: Product[]) =>
-      sumProducts(products),
-    ),
-  }),
+  extraSelectors: ({ selectProducts }) => {
+    const { selectRouteParams } = getRouterSelectors();
+
+    const selectProductsSum = createSelector(
+      selectProducts,
+      (products: Product[]) => sumProducts(products),
+    );
+
+    const selectByProductId = createSelector(
+      selectProducts,
+      selectRouteParams,
+      (products: Product[], { id }) =>
+        products.find((product: Product) => product.id === parseInt(id)),
+    );
+    return { selectProductsSum, selectByProductId };
+  },
 });

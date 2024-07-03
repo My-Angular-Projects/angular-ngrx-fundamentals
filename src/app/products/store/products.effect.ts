@@ -2,16 +2,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import { ProductsService } from '../services/products.service';
 import { ProductsActions, ProductsAPIActions } from './products.action';
-import {
-  catchError,
-  concatMap,
-  exhaustMap,
-  map,
-  mergeMap,
-  of,
-  switchMap,
-} from 'rxjs';
-import { Router } from '@angular/router';
+import { catchError, concatMap, exhaustMap, map, mergeMap, of } from 'rxjs';
 
 export const productsLoadEffect = createEffect(
   (actions$ = inject(Actions), productsService = inject(ProductsService)) =>
@@ -85,13 +76,4 @@ export const productsRemoveEffect = createEffect(
       ),
     ),
   { functional: true },
-);
-
-export const productRedirectEffect = createEffect(
-  (actions$ = inject(Actions)) =>
-    actions$.pipe(
-      ofType(ProductsAPIActions),
-      switchMap(() => inject(Router).navigate(['/products'])),
-    ),
-  { functional: true, dispatch: false },
 );
