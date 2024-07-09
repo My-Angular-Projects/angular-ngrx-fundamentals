@@ -17,6 +17,10 @@ export class ProductPageComponent {
     select(productsFeature.selectByProductId),
   );
 
+  public readonly isLoading$ = this.store.pipe(
+    select(productsFeature.selectLoading),
+  );
+
   public addProduct(product: Product): void {
     this.store.dispatch(ProductsActions.addProduct({ product }));
   }

@@ -16,12 +16,6 @@ export class ProductsService {
       .pipe(catchError(this.handleError));
   }
 
-  public getById(id: number) {
-    return this.http
-      .get<Product>(`${this.productsAPIUrl}/${id}`)
-      .pipe(catchError(this.handleError));
-  }
-
   public add({ name, price }: Product): Observable<Product> {
     return this.http
       .post<Product>(this.productsAPIUrl, { name, price })
